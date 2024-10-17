@@ -1,0 +1,43 @@
+digraph G {
+    rankdir="LR"
+
+  subgraph cluster_0 {
+    graph[style=filled, fillcolor=lightgrey];
+    node [style=filled,color=white];
+    label = "Backend";
+    
+        subgraph cluster_01 {
+        graph[style=filled,shape=box];
+        api;
+        label = "Connection layer";
+      }
+        components;
+        files;
+  }
+
+    subgraph cluster_10 {
+        graph[style=filled,shape=box];
+
+        static
+        label = <Assets<br/>
+        Scripts and CSS<br/> files are not available<br/> here and are generated<br/> by a bundler>;
+      }
+  subgraph cluster_1 {
+    graph[style=filled, fillcolor=lightblue];
+    node [style=filled, fillcolor=lightgrey, color=black];
+    label = "Frontend";
+
+        subgraph cluster_11 {
+        graph[style=filled,shape=box];
+        css
+        components_2[label=<components>];
+        files_2[label=<files>];
+        label = "For bundle";
+      }
+  }
+  
+  components->components_2[label=<automatic routes>]
+  components_2->api
+  files_2->api
+
+}
