@@ -1,0 +1,62 @@
+digraph G {
+    rankdir="LR";
+    bgcolor="white";
+    fontname="Arial";
+
+    node [fontname="Arial", shape=box, style=filled, fillcolor="white"];
+    edge [fontname="Arial", color="#555555"];
+
+    // Backend cluster
+    subgraph cluster_backend {
+        style=filled;
+        fillcolor="#D3D3D3";
+        label="Backend";
+        fontsize=16;
+
+        // Connection Layer subcluster
+        subgraph cluster_connection {
+            style=rounded;
+            color="#A9A9A9";
+            label="Connection Layer";
+            fontsize=14;
+            api [label="API", fillcolor="#FFFFFF"];
+        }
+
+        components [label="Components"];
+        files [label="Files"];
+    }
+
+    // Assets cluster
+    subgraph cluster_assets {
+        style=filled;
+        fillcolor="#B0E0E6";
+        label="Assets";
+        fontsize=16;
+        bundled [color="red", style=rounded, label=<Scripts and CSS<br/> files are <B>not<br/> available</B><br/> here and are<br/> generated<br/> by a bundler.>]
+        static [label="Static Files"];
+    }
+
+    // Frontend cluster
+    subgraph cluster_frontend {
+        style=filled;
+        fillcolor="#B0E0E6";
+        label="Frontend";
+        fontsize=16;
+
+        // For Bundle subcluster
+        subgraph cluster_bundle {
+            style=rounded;
+            color="#87CEEB";
+            label="For Bundle";
+            fontsize=14;
+            css [label="CSS"];
+            components_2 [label="Components"];
+            files_2 [label="Files"];
+        }
+    }
+
+    // Edges with labels
+    components -> components_2 [label="Automatic\nRoutes", fontsize=12];
+    components_2 -> api [fontsize=12];
+    files_2 -> api [fontsize=12];
+}
