@@ -8,12 +8,29 @@ globalThis.startHydrate = (reactComponent, elSelector, props) => {
       props,
     ),
   );
-  globalThis.starDevTools = () => {
-    setInterval(async () => {
+};
+globalThis.starDevTools = () => {
+  let restart = false;
+  const refresh = async () => {
+    try {
       const hasChange = await (await fetch("/has_change")).json();
-      if (hasChange) {
+      if (hasChange || restart) {
+        restart = false;
         globalThis.location.reload();
       }
+    } catch (e) {
+      restart = true;
+      console.error(
+        "These request errors are because you are in developer mode and there is no connection with the server.",
+      );
+      console.log(e);
+    }
+  };
+  const refreshJob = () => {
+    setTimeout(async () => {
+      await refresh();
+      refreshJob();
     }, 1000);
   };
+  refreshJob();
 };
