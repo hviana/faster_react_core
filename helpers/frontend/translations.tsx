@@ -1,5 +1,4 @@
 import i18next from "i18next";
-import HttpBackend, { HttpBackendOptions } from "i18next-http-backend";
 import FrontExporter from "../../front_exporter.ts";
 import React, { useEffect, useState } from "react";
 
@@ -11,7 +10,9 @@ if (typeof document !== "undefined") {
   detectedLang = navigator.language || navigator.userLanguage;
 }
 
-const instances: any = {};
+let initialized: any = undefined;
+
+let t: any = undefined;
 
 const useTranslation = (options: any = {}): any => {
   if (options.lng) {
@@ -28,57 +29,82 @@ const useTranslation = (options: any = {}): any => {
   } else {
     options.ns = ["translation"];
   }
-  const langsKey = options.lng.join("||");
-  const nsKey = options.ns.join("||");
-  if (instances[langsKey]) {
-    if (instances[langsKey][nsKey]) {
-      return instances[langsKey][nsKey];
-    }
-  }
-  const instance: any = i18next.createInstance();
-  if (!instances[langsKey]) {
-    instances[langsKey] = {};
-  }
   //@ts-ignore
   if (typeof document === "undefined") {
-    instance.init({
-      ...{
-        resources: FrontExporter.translations,
-        interpolation: { escapeValue: false },
-      },
-      ...options,
-    });
-    instances[langsKey][nsKey] = (props: any) => (
-      <>{instance.t(props["text"], props)}</>
-    );
-  } else {
-    const awaitInit = new Promise((resolve, reject) => {
-      instance.use(HttpBackend).init({
+    if (!initialized) {
+      initialized = true;
+      i18next.init({
         ...{
-          fallbackLng: "en",
+          resources: FrontExporter.translations,
           interpolation: { escapeValue: false },
-          backend: {
-            loadPath: `/static/translations/{{lng}}/{{ns}}.json`,
-            addPath: `/static/translations/{{lng}}/{{ns}}.json`,
-          },
         },
         ...options,
-      }, (err: any, t: any) => {
-        resolve(true);
       });
+    }
+    if (!t) {
+      t = (props: any) => <>{i18next.t(props["text"], props)}</>;
+    }
+    return t;
+  } else {
+    let awaitInit = new Promise((resolve, reject) => {
+      resolve(true);
     });
-    instances[langsKey][nsKey] = (props: any) => {
-      const [conditionMet, setConditionMet] = useState(false);
-      useEffect(async () => {
-        await awaitInit;
-        setConditionMet(true);
-      }, []);
-      return (
-        <>{conditionMet ? instance.t(props["text"], props) : props["text"]}</>
-      );
-    };
+    let awaitResources = new Promise((resolve, reject) => {
+      resolve(true);
+    });
+    if (!initialized) {
+      initialized = true;
+      awaitInit = new Promise((resolve, reject) => {
+        i18next.init({
+          ...{
+            partialBundledLanguages: true,
+            ns: [],
+            resources: {},
+            interpolation: { escapeValue: false },
+          },
+          ...options,
+        }, (err: any, t: any) => {
+          resolve(true);
+        });
+      });
+    }
+    let needsResouce = false;
+    awaitResources = new Promise((resolve, reject) => {
+      for (const lng of options.lng) {
+        for (const ns of options.ns) {
+          if (!i18next.hasResourceBundle(lng, ns)) {
+            needsResouce = true;
+            try {
+              fetch(
+                `/static/translations/${encodeURIComponent(lng)}/${
+                  encodeURIComponent(ns)
+                }.json`,
+              ).then((response) => response.json()).then((json) => {
+                i18next.addResourceBundle(lng, ns, json);
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        }
+      }
+      resolve(true);
+    });
+    if (needsResouce || !t) {
+      t = (props: any) => {
+        const [conditionMet, setConditionMet] = useState(false);
+        useEffect(async () => {
+          await awaitInit;
+          await awaitResources;
+          setConditionMet(true);
+        }, []);
+        return (
+          <>{conditionMet ? i18next.t(props["text"], props) : props["text"]}</>
+        );
+      };
+    }
+    return t;
   }
-  return instances[langsKey][nsKey];
 };
 
 export { detectedLang, useTranslation };
