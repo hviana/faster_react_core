@@ -70,8 +70,10 @@ const useTranslation = (options: any = {}): any => {
     }
     let needsResouce = false;
     awaitResources = new Promise((resolve, reject) => {
-      for (const lng of options.lng) {
-        for (const ns of options.ns) {
+      for (let i = 0; i < options.lng.length; i++) {
+        for (let j = 0; j < options.ns.length; j++) {
+          const lng = options.lng[i];
+          const ns = options.ns[j];
           if (!i18next.hasResourceBundle(lng, ns)) {
             needsResouce = true;
             try {
@@ -81,6 +83,11 @@ const useTranslation = (options: any = {}): any => {
                 }.json`,
               ).then((response) => response.json()).then((json) => {
                 i18next.addResourceBundle(lng, ns, json);
+                if (
+                  (i == options.lng.length - 1) && (j == options.ns.length - 1)
+                ) {
+                  resolve(true);
+                }
               });
             } catch (e) {
               console.log(e);
@@ -88,7 +95,6 @@ const useTranslation = (options: any = {}): any => {
           }
         }
       }
-      resolve(true);
     });
     if (needsResouce || !t) {
       t = (props: any) => {
