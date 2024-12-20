@@ -1,0 +1,10 @@
+{
+  "name": "@hviana/faster-react-core",
+  "version": "1.2.3",
+  "exports": {
+    "./new.ts": "./new.ts"
+  },
+  "publish": {
+    "include": ["./**"]
+  }
+}
