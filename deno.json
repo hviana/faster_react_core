@@ -1,6 +1,6 @@
 {
   "name": "@hviana/faster-react-core",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "exports": {
     "./new.ts": "./new.ts"
   },

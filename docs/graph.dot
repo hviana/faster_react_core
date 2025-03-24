@@ -52,7 +52,7 @@ digraph G {
             css [label="CSS"];
             components_2 [label="Components"];
             files_2 [label="Files"];
-            translations [label="translations"];
+            translations [label="Translations"];
         }
     }
 
