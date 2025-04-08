@@ -21,7 +21,7 @@ const getStream = async (
   props: Record<any, any>,
   frameworkProps: Record<any, any>,
   Pagetsx: any,
-  extra: Record<any, any>,
+  extra: Record<any, any> = {},
 ) => {
   return await renderToReadableStream(
     <Page
@@ -34,10 +34,11 @@ const getStream = async (
         >
           <Pagetsx {...props} />
           <script>
-            {`document.addEventListener(\`DOMContentLoaded\`, function (event) {
+            {!extra.disableHydrate &&
+              `document.addEventListener(\`DOMContentLoaded\`, function (event) {
               startHydrate(\`${Pagetsx.name}\`, \`#page\`, JSON.parse(decodeURIComponent(\`${
-              encodeURIComponent(JSON.stringify(props))
-            }\`)))});`}
+                encodeURIComponent(JSON.stringify(props))
+              }\`)))});`}
           </script>
           {frameworkProps.dev
             ? (

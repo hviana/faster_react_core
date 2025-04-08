@@ -14,9 +14,10 @@ const getComponentStream = async (
     >
       <Componentsx {...props} />
       <script>
-        {`startHydrate(\`${Componentsx.name}\`, \`#${id}\`, JSON.parse(decodeURIComponent(\`${
-          encodeURIComponent(JSON.stringify(props))
-        }\`)));`}
+        {!extra.disableHydrate &&
+          `startHydrate(\`${Componentsx.name}\`, \`#${id}\`, JSON.parse(decodeURIComponent(\`${
+            encodeURIComponent(JSON.stringify(props))
+          }\`)));`}
       </script>
     </div>,
   );

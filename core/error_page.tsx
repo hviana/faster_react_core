@@ -1,24 +1,21 @@
-import { Component } from "react";
-
-export default class FrameworkErrorPage extends Component {
-  override render() {
-    return (
-      <>
-        <h1 className="react-error-page-title">Error</h1>
-        <ul className="react-error-page-content">
-          <li className="react-error-page-name">
-            <strong>Message:</strong>
-            <br />
-            {(this.props as any).msg}
-          </li>
-          <li className="react-error-page-stack">
-            <strong>Stack:</strong>
-            <br />
-            {(this.props as any).stack}
-          </li>
-        </ul>
-        <style>
-          {`body {
+const FrameworkErrorPage = (props: any) => {
+  return (
+    <>
+      <h1 className="react-error-page-title">Error</h1>
+      <ul className="react-error-page-content">
+        <li className="react-error-page-name">
+          <strong>Message:</strong>
+          <br />
+          {(props as any).msg}
+        </li>
+        <li className="react-error-page-stack">
+          <strong>Stack:</strong>
+          <br />
+          {(props as any).stack}
+        </li>
+      </ul>
+      <style>
+        {`body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f7;
             display: flex;
@@ -75,8 +72,8 @@ export default class FrameworkErrorPage extends Component {
         .react-error-page-stack br {
             margin-bottom: 5px;
         }`}
-        </style>
-      </>
-    );
-  }
-}
+      </style>
+    </>
+  );
+};
+export default FrameworkErrorPage;

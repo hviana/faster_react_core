@@ -222,18 +222,25 @@ class Builder {
       msg: (e.message || JSON.stringify(e)),
       stack: e.stack,
     };
+    console.log(errorProps);
     if (type == "page") {
       return await getStream(
         errorProps,
         this.options.framework,
         FrameworkErrorPage,
-        { componentClass: "react-component-core-error-page" },
+        {
+          componentClass: "react-component-core-error-page",
+          disableHydrate: true,
+        },
       );
     } else if (type == "component") {
       return await getComponentStream(
         errorProps,
         FrameworkErrorPage,
-        { componentClass: "react-component-core-error-page" },
+        {
+          componentClass: "react-component-core-error-page",
+          disableHydrate: true,
+        },
       );
     }
   }
