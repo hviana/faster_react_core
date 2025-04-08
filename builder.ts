@@ -222,7 +222,6 @@ class Builder {
       msg: (e.message || JSON.stringify(e)),
       stack: e.stack,
     };
-    console.log(errorProps);
     if (type == "page") {
       return await getStream(
         errorProps,
