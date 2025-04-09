@@ -29,6 +29,7 @@ const getStream = async (
       page={
         <div
           id="page"
+          style="display:contents;"
           className={`react-page-wrapper ${extra.componentClass}`}
           suppressHydrationWarning
         >

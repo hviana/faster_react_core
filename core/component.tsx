@@ -9,6 +9,7 @@ const getComponentStream = async (
   return await renderToReadableStream(
     <div
       id={id}
+      style="display:contents;"
       className={`react-component-wrapper ${extra.componentClass}`}
       suppressHydrationWarning
     >
