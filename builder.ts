@@ -303,8 +303,8 @@ class Builder {
       console.log(e);
     }
     return {
-      ...Object.fromEntries(ctx.url.searchParams),
       ...data,
+      ...Object.fromEntries(ctx.url.searchParams),
     };
   }
   registerCoreRoutes() {
