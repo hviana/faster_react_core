@@ -14,7 +14,7 @@ interface Route {
   disableSSR?: boolean;
   elSelector?: string;
   method?: string;
-  // New optional parameter for debounce delay in milliseconds
+  // Optional debounce delay in milliseconds
   useDebounce?: number;
 }
 
@@ -61,7 +61,7 @@ const componentRoute = async (params: Route) => {
     const el = document.querySelector(params.elSelector);
     if (!el) {
       throw new Error(
-        `The selector ${params.elSelector} on route ${params.path} did not find any elements. Examples of selectors: #myID, .myCLass, #myID .Myclass, etc.`,
+        `The selector ${params.elSelector} on route ${params.path} did not find any elements. Examples: #myID, .myCLass, #myID .Myclass, etc.`,
       );
     }
     if (params.disableSSR) {
@@ -70,7 +70,8 @@ const componentRoute = async (params: Route) => {
       if (!(componentPath in globalThis.frontMap)) {
         throw new Error(`Component ${params.path} was not found.`);
       }
-      const component = createElement( //@ts-ignore
+      const component = createElement(
+        //@ts-ignore
         globalThis.frontMap[componentPath],
         data || {},
       );
@@ -104,7 +105,6 @@ const componentRoute = async (params: Route) => {
       el.innerHTML = text;
       executePostInnerHTMLScriptsTags(el);
     }
-
     if (params.endLoad) {
       await params.endLoad();
     }
@@ -113,15 +113,15 @@ const componentRoute = async (params: Route) => {
       if (params.onError) {
         try {
           await params.onError(e as Error);
-        } catch (e) {
-          console.log(e);
+        } catch (err) {
+          console.log(err);
         }
       }
       if (params.endLoad) {
         await params.endLoad();
       }
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.log(err);
     }
     console.log(e);
   }
@@ -173,26 +173,25 @@ const pageRoute = async (params: Route) => {
         if (params.onError) {
           try {
             await params.onError(e as Error);
-          } catch (e) {
-            console.log(e);
+          } catch (err) {
+            console.log(err);
           }
         }
         if (params.endLoad) {
           await params.endLoad();
         }
-      } catch (e) {
-        console.log(e);
+      } catch (err) {
+        console.log(err);
       }
       console.log(e);
     }
   }
 };
 
-const getJSON = async (params: Route): Promise<JSONValue | undefined> => {
-  //@ts-ignore
-  if (typeof document === "undefined") {
-    return undefined;
-  }
+// Internal getJSON logic (without debounce)
+const _getJSONInternal = async (
+  params: Route,
+): Promise<JSONValue | undefined> => {
   if (params.startLoad) {
     await params.startLoad();
   }
@@ -205,10 +204,8 @@ const getJSON = async (params: Route): Promise<JSONValue | undefined> => {
     }
     const headers = new Headers();
     if (params.headers) {
-      if (Object.keys(params.headers).length > 0) {
-        for (const hName in params.headers) {
-          headers.append(hName, params.headers[hName]);
-        }
+      for (const hName in params.headers) {
+        headers.append(hName, params.headers[hName]);
       }
     }
     let fetchParams: any = {};
@@ -237,44 +234,154 @@ const getJSON = async (params: Route): Promise<JSONValue | undefined> => {
   } catch (e) {
     try {
       if (params.onError) {
-        try {
-          await params.onError(e as Error);
-        } catch (e) {
-          console.log(e);
-        }
+        await params.onError(e as Error);
       }
       if (params.endLoad) {
         await params.endLoad();
       }
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.log(err);
     }
     console.log(e);
+    throw e;
   }
 };
+
+// Global Map for debouncing getJSON calls (keyed by canonical pathname)
+const getJSONDebounceMap = new Map<
+  string,
+  {
+    timer: ReturnType<typeof setTimeout>;
+    promise: Promise<JSONValue | undefined>;
+    resolve: (value: JSONValue | undefined) => void;
+    reject: (error: any) => void;
+  }
+>();
+
+const getJSON = async (params: Route): Promise<JSONValue | undefined> => {
+  //@ts-ignore
+  if (typeof document === "undefined") {
+    return undefined;
+  }
+  if (params.useDebounce) {
+    const resolvedUrl = new URL(params.path, globalThis.location.origin);
+    const key = `getJSON:${resolvedUrl.pathname}`;
+    const existing = getJSONDebounceMap.get(key);
+    if (existing) {
+      clearTimeout(existing.timer);
+      existing.timer = setTimeout(async () => {
+        try {
+          const result = await _getJSONInternal(params);
+          existing.resolve(result);
+        } catch (error) {
+          existing.reject(error);
+        } finally {
+          getJSONDebounceMap.delete(key);
+        }
+      }, params.useDebounce);
+      return existing.promise;
+    } else {
+      let resolveFunction: (value: JSONValue | undefined) => void;
+      let rejectFunction: (error: any) => void;
+      const deferredPromise = new Promise<JSONValue | undefined>(
+        (resolve, reject) => {
+          resolveFunction = resolve;
+          rejectFunction = reject;
+        },
+      );
+      const timer = setTimeout(async () => {
+        try {
+          const result = await _getJSONInternal(params);
+          resolveFunction(result);
+        } catch (error) {
+          rejectFunction(error);
+        } finally {
+          getJSONDebounceMap.delete(key);
+        }
+      }, params.useDebounce);
+      getJSONDebounceMap.set(key, {
+        timer,
+        promise: deferredPromise,
+        resolve: resolveFunction!,
+        reject: rejectFunction!,
+      });
+      return deferredPromise;
+    }
+  } else {
+    return _getJSONInternal(params);
+  }
+};
+
+// Global Map for debouncing route calls (keyed by canonical pathname)
+const routeDebounceMap = new Map<
+  string,
+  {
+    timer: ReturnType<typeof setTimeout>;
+    promise: Promise<void>;
+    resolve: () => void;
+    reject: (error: any) => void;
+  }
+>();
 
 const route = (params: Route): () => undefined | Promise<void> => {
   //@ts-ignore
   if (typeof document === "undefined") {
     return () => undefined;
   }
+  // Ensure the path starts with "/"
   if (!params.path.startsWith("/")) {
     params.path = "/" + params.path;
   }
+  // Use URL to get a canonical pathname key for both page and component routes.
+  const resolvedUrl = new URL(params.path, globalThis.location.origin);
+  const key = `route:${resolvedUrl.pathname}`;
 
-  // Select which route function to execute
   const executeFn = params.path.startsWith("/components")
     ? () => componentRoute(params)
     : () => pageRoute(params);
 
-  // If useDebounce is provided, delay executing the function
   if (params.useDebounce) {
-    return () =>
-      new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(executeFn());
+    return () => {
+      const existing = routeDebounceMap.get(key);
+      if (existing) {
+        clearTimeout(existing.timer);
+        existing.timer = setTimeout(async () => {
+          try {
+            await executeFn();
+            existing.resolve();
+          } catch (err) {
+            existing.reject(err);
+          } finally {
+            routeDebounceMap.delete(key);
+          }
         }, params.useDebounce);
-      });
+        return existing.promise;
+      } else {
+        let resolveFunction: () => void;
+        let rejectFunction: (error: any) => void;
+        const deferredPromise = new Promise<void>((resolve, reject) => {
+          resolveFunction = resolve;
+          rejectFunction = reject;
+        });
+        const timer = setTimeout(async () => {
+          try {
+            await executeFn();
+            resolveFunction();
+          } catch (err) {
+            rejectFunction(err);
+          } finally {
+            routeDebounceMap.delete(key);
+          }
+        }, params.useDebounce);
+        routeDebounceMap.set(key, {
+          timer,
+          promise: deferredPromise,
+          resolve: resolveFunction!,
+          reject: rejectFunction!,
+        });
+        return deferredPromise;
+      }
+    };
   } else {
     return executeFn;
   }
