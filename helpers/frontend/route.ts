@@ -1,6 +1,7 @@
 import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 import type { JSONValue } from "@helpers/types.ts";
+
 interface Route {
   headers?: Record<string, string>;
   content?:
@@ -13,22 +14,25 @@ interface Route {
   disableSSR?: boolean;
   elSelector?: string;
   method?: string;
+  // New optional parameter for debounce delay in milliseconds
+  useDebounce?: number;
 }
+
 const executePostInnerHTMLScriptsTags = (el: any) => {
-  Array.from(el.querySelectorAll("script"))
-    .forEach((oldScriptEl: any) => {
+  Array.from(el.querySelectorAll("script")).forEach((oldScriptEl: any) => {
+    //@ts-ignore
+    const newScriptEl = document.createElement("script");
+    Array.from(oldScriptEl.attributes).forEach((attr) => {
       //@ts-ignore
-      const newScriptEl = document.createElement("script");
-      Array.from(oldScriptEl.attributes).forEach((attr) => {
-        //@ts-ignore
-        newScriptEl.setAttribute(attr.name, attr.value);
-      });
-      //@ts-ignore
-      const scriptText = document.createTextNode(oldScriptEl.innerHTML);
-      newScriptEl.appendChild(scriptText);
-      oldScriptEl.parentNode.replaceChild(newScriptEl, oldScriptEl);
+      newScriptEl.setAttribute(attr.name, attr.value);
     });
+    //@ts-ignore
+    const scriptText = document.createTextNode(oldScriptEl.innerHTML);
+    newScriptEl.appendChild(scriptText);
+    oldScriptEl.parentNode.replaceChild(newScriptEl, oldScriptEl);
+  });
 };
+
 const componentRoute = async (params: Route) => {
   if (!params.elSelector) {
     throw new Error(
@@ -122,6 +126,7 @@ const componentRoute = async (params: Route) => {
     console.log(e);
   }
 };
+
 const pageRoute = async (params: Route) => {
   if (params.startLoad) {
     await params.startLoad();
@@ -182,6 +187,7 @@ const pageRoute = async (params: Route) => {
     }
   }
 };
+
 const getJSON = async (params: Route): Promise<JSONValue | undefined> => {
   //@ts-ignore
   if (typeof document === "undefined") {
@@ -246,6 +252,7 @@ const getJSON = async (params: Route): Promise<JSONValue | undefined> => {
     console.log(e);
   }
 };
+
 const route = (params: Route): () => undefined | Promise<void> => {
   //@ts-ignore
   if (typeof document === "undefined") {
@@ -254,10 +261,23 @@ const route = (params: Route): () => undefined | Promise<void> => {
   if (!params.path.startsWith("/")) {
     params.path = "/" + params.path;
   }
-  if (params.path.startsWith("/components")) {
-    return () => componentRoute(params);
+
+  // Select which route function to execute
+  const executeFn = params.path.startsWith("/components")
+    ? () => componentRoute(params)
+    : () => pageRoute(params);
+
+  // If useDebounce is provided, delay executing the function
+  if (params.useDebounce) {
+    return () =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(executeFn());
+        }, params.useDebounce);
+      });
   } else {
-    return () => pageRoute(params);
+    return executeFn;
   }
 };
+
 export { getJSON, type Route, route };
