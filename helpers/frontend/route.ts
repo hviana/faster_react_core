@@ -67,7 +67,7 @@ const componentRoute = async (params: Route) => {
     if (params.disableSSR) {
       const resolvedUrl = new URL(params.path, globalThis.location.origin);
       const componentPath = resolvedUrl.pathname.slice("/components/".length);
-      cosnt queryParams = Object.fromEntries(resolvedUrl.searchParams);
+      const queryParams = Object.fromEntries(resolvedUrl.searchParams);
       data = {...(data || {}), ...queryParams};
       //@ts-ignore
       if (!(componentPath in globalThis.frontMap)) {
