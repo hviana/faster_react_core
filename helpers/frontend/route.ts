@@ -65,7 +65,8 @@ const componentRoute = async (params: Route) => {
       );
     }
     if (params.disableSSR) {
-      const componentPath = params.path.slice("/components/".length);
+      const resolvedUrl = new URL(params.path, globalThis.location.origin);
+      const componentPath = resolvedUrl.pathname.slice("/components/".length);
       //@ts-ignore
       if (!(componentPath in globalThis.frontMap)) {
         throw new Error(`Component ${params.path} was not found.`);
