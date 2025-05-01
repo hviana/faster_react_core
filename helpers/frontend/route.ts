@@ -67,6 +67,8 @@ const componentRoute = async (params: Route) => {
     if (params.disableSSR) {
       const resolvedUrl = new URL(params.path, globalThis.location.origin);
       const componentPath = resolvedUrl.pathname.slice("/components/".length);
+      cosnt queryParams = Object.fromEntries(resolvedUrl.searchParams);
+      data = {...(data || {}), ...queryParams};
       //@ts-ignore
       if (!(componentPath in globalThis.frontMap)) {
         throw new Error(`Component ${params.path} was not found.`);
@@ -74,7 +76,7 @@ const componentRoute = async (params: Route) => {
       const component = createElement(
         //@ts-ignore
         globalThis.frontMap[componentPath],
-        data || {},
+        data,
       );
       //@ts-ignore
       const compomentWrapper = document.createElement("div");
