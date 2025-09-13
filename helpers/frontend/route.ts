@@ -68,7 +68,7 @@ const componentRoute = async (params: Route) => {
       const resolvedUrl = new URL(params.path, globalThis.location.origin);
       const componentPath = resolvedUrl.pathname.slice("/components/".length);
       const queryParams = Object.fromEntries(resolvedUrl.searchParams);
-      data = {...(data || {}), ...queryParams};
+      data = { ...(data || {}), ...queryParams };
       //@ts-ignore
       if (!(componentPath in globalThis.frontMap)) {
         throw new Error(`Component ${params.path} was not found.`);

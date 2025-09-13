@@ -1,111 +1,339 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="366pt" height="503pt" viewBox="0.00 0.00 365.80 503.00">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 499)">
-<title>G</title>
-<polygon fill="white" stroke="none" points="-4,4 -4,-499 361.8,-499 361.8,4 -4,4"/>
-<g id="clust1" class="cluster">
-<title>cluster_backend</title>
-<polygon fill="#d3d3d3" stroke="black" points="216.07,-62 216.07,-280 357.8,-280 357.8,-62 216.07,-62"/>
-<text text-anchor="middle" x="286.93" y="-261.6" font-family="Arial" font-size="16.00">Backend</text>
-</g>
-<g id="clust2" class="cluster">
-<title>cluster_connection</title>
-<path fill="white" stroke="#a9a9a9" d="M236.07,-70C236.07,-70 337.8,-70 337.8,-70 343.8,-70 349.8,-76 349.8,-82 349.8,-82 349.8,-135 349.8,-135 349.8,-141 343.8,-147 337.8,-147 337.8,-147 236.07,-147 236.07,-147 230.07,-147 224.07,-141 224.07,-135 224.07,-135 224.07,-82 224.07,-82 224.07,-76 230.07,-70 236.07,-70"/>
-<text text-anchor="middle" x="286.93" y="-130.4" font-family="Arial" font-size="14.00">Connection Layer</text>
-</g>
-<g id="clust3" class="cluster">
-<title>cluster_assets</title>
-<polygon fill="#b0e0e6" stroke="black" points="8,-298 8,-487 142.71,-487 142.71,-298 8,-298"/>
-<text text-anchor="middle" x="75.35" y="-468.6" font-family="Arial" font-size="16.00">Assets</text>
-</g>
-<g id="clust4" class="cluster">
-<title>cluster_frontend</title>
-<polygon fill="#b0e0e6" stroke="black" points="11.67,-8 11.67,-290 139.04,-290 139.04,-8 11.67,-8"/>
-<text text-anchor="middle" x="75.35" y="-271.6" font-family="Arial" font-size="16.00">Frontend</text>
-</g>
-<g id="clust5" class="cluster">
-<title>cluster_bundle</title>
-<path fill="white" stroke="#87ceeb" d="M31.67,-16C31.67,-16 119.04,-16 119.04,-16 125.04,-16 131.04,-22 131.04,-28 131.04,-28 131.04,-243 131.04,-243 131.04,-249 125.04,-255 119.04,-255 119.04,-255 31.67,-255 31.67,-255 25.67,-255 19.67,-249 19.67,-243 19.67,-243 19.67,-28 19.67,-28 19.67,-22 25.67,-16 31.67,-16"/>
-<text text-anchor="middle" x="75.35" y="-238.4" font-family="Arial" font-size="14.00">For Bundle</text>
-</g>
-<!-- api -->
-<g id="node1" class="node">
-<title>api</title>
-<polygon fill="#ffffff" stroke="black" points="313.43,-114 259.43,-114 259.43,-78 313.43,-78 313.43,-114"/>
-<text text-anchor="middle" x="286.43" y="-91.8" font-family="Arial" font-size="14.00">API</text>
-</g>
-<!-- components -->
-<g id="node2" class="node">
-<title>components</title>
-<polygon fill="white" stroke="black" points="334.12,-191 238.74,-191 238.74,-155 334.12,-155 334.12,-191"/>
-<text text-anchor="middle" x="286.43" y="-168.8" font-family="Arial" font-size="14.00">Components</text>
-</g>
-<!-- components_2 -->
-<g id="node7" class="node">
-<title>components_2</title>
-<polygon fill="white" stroke="black" points="123.04,-168 27.67,-168 27.67,-132 123.04,-132 123.04,-168"/>
-<text text-anchor="middle" x="75.35" y="-145.8" font-family="Arial" font-size="14.00">Components</text>
-</g>
-<!-- components&#45;&gt;components_2 -->
-<g id="edge1" class="edge">
-<title>components-&gt;components_2</title>
-<path fill="none" stroke="#555555" d="M238.42,-167.83C207.75,-164.45 167.49,-160.03 134.77,-156.43"/>
-<polygon fill="#555555" stroke="#555555" points="135.36,-152.97 125.04,-155.36 134.6,-159.93 135.36,-152.97"/>
-<text text-anchor="middle" x="179.39" y="-182.24" font-family="Arial" font-size="12.00">Automatic</text>
-<text text-anchor="middle" x="179.39" y="-167.84" font-family="Arial" font-size="12.00">Routes</text>
-</g>
-<!-- files -->
-<g id="node3" class="node">
-<title>files</title>
-<polygon fill="white" stroke="black" points="313.43,-245 259.43,-245 259.43,-209 313.43,-209 313.43,-245"/>
-<text text-anchor="middle" x="286.43" y="-222.8" font-family="Arial" font-size="14.00">Files</text>
-</g>
-<!-- bundled -->
-<g id="node4" class="node">
-<title>bundled</title>
-<path fill="none" stroke="red" d="M122.71,-398C122.71,-398 28,-398 28,-398 22,-398 16,-392 16,-386 16,-386 16,-318 16,-318 16,-312 22,-306 28,-306 28,-306 122.71,-306 122.71,-306 128.71,-306 134.71,-312 134.71,-318 134.71,-318 134.71,-386 134.71,-386 134.71,-392 128.71,-398 122.71,-398"/>
-<text text-anchor="start" x="24" y="-382.4" font-family="Arial" font-size="14.00">Scripts and CSS</text>
-<text text-anchor="start" x="36.07" y="-368.4" font-family="Arial" font-size="14.00"> files are </text>
-<text text-anchor="start" x="92.87" y="-368.4" font-family="Arial" font-weight="bold" font-size="14.00">not</text>
-<text text-anchor="start" x="43.83" y="-354.4" font-family="Arial" font-weight="bold" font-size="14.00"> available</text>
-<text text-anchor="start" x="33.71" y="-340.4" font-family="Arial" font-size="14.00"> here and are</text>
-<text text-anchor="start" x="41.88" y="-326.4" font-family="Arial" font-size="14.00"> generated</text>
-<text text-anchor="start" x="32.94" y="-312.4" font-family="Arial" font-size="14.00"> by a bundler.</text>
-</g>
-<!-- static -->
-<g id="node5" class="node">
-<title>static</title>
-<polygon fill="white" stroke="black" points="117.59,-452 33.12,-452 33.12,-416 117.59,-416 117.59,-452"/>
-<text text-anchor="middle" x="75.35" y="-429.8" font-family="Arial" font-size="14.00">Static Files</text>
-</g>
-<!-- css -->
-<g id="node6" class="node">
-<title>css</title>
-<polygon fill="white" stroke="black" points="102.35,-60 48.35,-60 48.35,-24 102.35,-24 102.35,-60"/>
-<text text-anchor="middle" x="75.35" y="-37.8" font-family="Arial" font-size="14.00">CSS</text>
-</g>
-<!-- components_2&#45;&gt;api -->
-<g id="edge2" class="edge">
-<title>components_2-&gt;api</title>
-<path fill="none" stroke="#555555" d="M123.54,-137.81C161.19,-128.09 213.23,-114.65 248.04,-105.66"/>
-<polygon fill="#555555" stroke="#555555" points="248.87,-109.06 257.68,-103.17 247.12,-102.28 248.87,-109.06"/>
-</g>
-<!-- files_2 -->
-<g id="node8" class="node">
-<title>files_2</title>
-<polygon fill="white" stroke="black" points="102.35,-114 48.35,-114 48.35,-78 102.35,-78 102.35,-114"/>
-<text text-anchor="middle" x="75.35" y="-91.8" font-family="Arial" font-size="14.00">Files</text>
-</g>
-<!-- files_2&#45;&gt;api -->
-<g id="edge3" class="edge">
-<title>files_2-&gt;api</title>
-<path fill="none" stroke="#555555" d="M102.83,-96C139.52,-96 205.99,-96 247.81,-96"/>
-<polygon fill="#555555" stroke="#555555" points="247.66,-99.5 257.66,-96 247.66,-92.5 247.66,-99.5"/>
-</g>
-<!-- translations -->
-<g id="node9" class="node">
-<title>translations</title>
-<polygon fill="white" stroke="black" points="121.48,-222 29.23,-222 29.23,-186 121.48,-186 121.48,-222"/>
-<text text-anchor="middle" x="75.35" y="-199.8" font-family="Arial" font-size="14.00">Translations</text>
-</g>
-</g>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="366pt"
+  height="503pt"
+  viewBox="0.00 0.00 365.80 503.00"
+>
+  <g
+    id="graph0"
+    class="graph"
+    transform="scale(1 1) rotate(0) translate(4 499)"
+  >
+    <title>G</title>
+    <polygon
+      fill="white"
+      stroke="none"
+      points="-4,4 -4,-499 361.8,-499 361.8,4 -4,4"
+    />
+    <g id="clust1" class="cluster">
+      <title>cluster_backend</title>
+      <polygon
+        fill="#d3d3d3"
+        stroke="black"
+        points="216.07,-62 216.07,-280 357.8,-280 357.8,-62 216.07,-62"
+      />
+      <text
+        text-anchor="middle"
+        x="286.93"
+        y="-261.6"
+        font-family="Arial"
+        font-size="16.00"
+      >Backend</text>
+    </g>
+    <g id="clust2" class="cluster">
+      <title>cluster_connection</title>
+      <path
+        fill="white"
+        stroke="#a9a9a9"
+        d="M236.07,-70C236.07,-70 337.8,-70 337.8,-70 343.8,-70 349.8,-76 349.8,-82 349.8,-82 349.8,-135 349.8,-135 349.8,-141 343.8,-147 337.8,-147 337.8,-147 236.07,-147 236.07,-147 230.07,-147 224.07,-141 224.07,-135 224.07,-135 224.07,-82 224.07,-82 224.07,-76 230.07,-70 236.07,-70"
+      />
+      <text
+        text-anchor="middle"
+        x="286.93"
+        y="-130.4"
+        font-family="Arial"
+        font-size="14.00"
+      >Connection Layer</text>
+    </g>
+    <g id="clust3" class="cluster">
+      <title>cluster_assets</title>
+      <polygon
+        fill="#b0e0e6"
+        stroke="black"
+        points="8,-298 8,-487 142.71,-487 142.71,-298 8,-298"
+      />
+      <text
+        text-anchor="middle"
+        x="75.35"
+        y="-468.6"
+        font-family="Arial"
+        font-size="16.00"
+      >Assets</text>
+    </g>
+    <g id="clust4" class="cluster">
+      <title>cluster_frontend</title>
+      <polygon
+        fill="#b0e0e6"
+        stroke="black"
+        points="11.67,-8 11.67,-290 139.04,-290 139.04,-8 11.67,-8"
+      />
+      <text
+        text-anchor="middle"
+        x="75.35"
+        y="-271.6"
+        font-family="Arial"
+        font-size="16.00"
+      >Frontend</text>
+    </g>
+    <g id="clust5" class="cluster">
+      <title>cluster_bundle</title>
+      <path
+        fill="white"
+        stroke="#87ceeb"
+        d="M31.67,-16C31.67,-16 119.04,-16 119.04,-16 125.04,-16 131.04,-22 131.04,-28 131.04,-28 131.04,-243 131.04,-243 131.04,-249 125.04,-255 119.04,-255 119.04,-255 31.67,-255 31.67,-255 25.67,-255 19.67,-249 19.67,-243 19.67,-243 19.67,-28 19.67,-28 19.67,-22 25.67,-16 31.67,-16"
+      />
+      <text
+        text-anchor="middle"
+        x="75.35"
+        y="-238.4"
+        font-family="Arial"
+        font-size="14.00"
+      >For Bundle</text>
+    </g>
+    <!-- api -->
+    <g id="node1" class="node">
+      <title>api</title>
+      <polygon
+        fill="#ffffff"
+        stroke="black"
+        points="313.43,-114 259.43,-114 259.43,-78 313.43,-78 313.43,-114"
+      />
+      <text
+        text-anchor="middle"
+        x="286.43"
+        y="-91.8"
+        font-family="Arial"
+        font-size="14.00"
+      >API</text>
+    </g>
+    <!-- components -->
+    <g id="node2" class="node">
+      <title>components</title>
+      <polygon
+        fill="white"
+        stroke="black"
+        points="334.12,-191 238.74,-191 238.74,-155 334.12,-155 334.12,-191"
+      />
+      <text
+        text-anchor="middle"
+        x="286.43"
+        y="-168.8"
+        font-family="Arial"
+        font-size="14.00"
+      >Components</text>
+    </g>
+    <!-- components_2 -->
+    <g id="node7" class="node">
+      <title>components_2</title>
+      <polygon
+        fill="white"
+        stroke="black"
+        points="123.04,-168 27.67,-168 27.67,-132 123.04,-132 123.04,-168"
+      />
+      <text
+        text-anchor="middle"
+        x="75.35"
+        y="-145.8"
+        font-family="Arial"
+        font-size="14.00"
+      >Components</text>
+    </g>
+    <!-- components&#45;&gt;components_2 -->
+    <g id="edge1" class="edge">
+      <title>components-&gt;components_2</title>
+      <path
+        fill="none"
+        stroke="#555555"
+        d="M238.42,-167.83C207.75,-164.45 167.49,-160.03 134.77,-156.43"
+      />
+      <polygon
+        fill="#555555"
+        stroke="#555555"
+        points="135.36,-152.97 125.04,-155.36 134.6,-159.93 135.36,-152.97"
+      />
+      <text
+        text-anchor="middle"
+        x="179.39"
+        y="-182.24"
+        font-family="Arial"
+        font-size="12.00"
+      >Automatic</text>
+      <text
+        text-anchor="middle"
+        x="179.39"
+        y="-167.84"
+        font-family="Arial"
+        font-size="12.00"
+      >Routes</text>
+    </g>
+    <!-- files -->
+    <g id="node3" class="node">
+      <title>files</title>
+      <polygon
+        fill="white"
+        stroke="black"
+        points="313.43,-245 259.43,-245 259.43,-209 313.43,-209 313.43,-245"
+      />
+      <text
+        text-anchor="middle"
+        x="286.43"
+        y="-222.8"
+        font-family="Arial"
+        font-size="14.00"
+      >Files</text>
+    </g>
+    <!-- bundled -->
+    <g id="node4" class="node">
+      <title>bundled</title>
+      <path
+        fill="none"
+        stroke="red"
+        d="M122.71,-398C122.71,-398 28,-398 28,-398 22,-398 16,-392 16,-386 16,-386 16,-318 16,-318 16,-312 22,-306 28,-306 28,-306 122.71,-306 122.71,-306 128.71,-306 134.71,-312 134.71,-318 134.71,-318 134.71,-386 134.71,-386 134.71,-392 128.71,-398 122.71,-398"
+      />
+      <text
+        text-anchor="start"
+        x="24"
+        y="-382.4"
+        font-family="Arial"
+        font-size="14.00"
+      >Scripts and CSS</text>
+      <text
+        text-anchor="start"
+        x="36.07"
+        y="-368.4"
+        font-family="Arial"
+        font-size="14.00"
+      > files are </text>
+      <text
+        text-anchor="start"
+        x="92.87"
+        y="-368.4"
+        font-family="Arial"
+        font-weight="bold"
+        font-size="14.00"
+      >not</text>
+      <text
+        text-anchor="start"
+        x="43.83"
+        y="-354.4"
+        font-family="Arial"
+        font-weight="bold"
+        font-size="14.00"
+      > available</text>
+      <text
+        text-anchor="start"
+        x="33.71"
+        y="-340.4"
+        font-family="Arial"
+        font-size="14.00"
+      > here and are</text>
+      <text
+        text-anchor="start"
+        x="41.88"
+        y="-326.4"
+        font-family="Arial"
+        font-size="14.00"
+      > generated</text>
+      <text
+        text-anchor="start"
+        x="32.94"
+        y="-312.4"
+        font-family="Arial"
+        font-size="14.00"
+      > by a bundler.</text>
+    </g>
+    <!-- static -->
+    <g id="node5" class="node">
+      <title>static</title>
+      <polygon
+        fill="white"
+        stroke="black"
+        points="117.59,-452 33.12,-452 33.12,-416 117.59,-416 117.59,-452"
+      />
+      <text
+        text-anchor="middle"
+        x="75.35"
+        y="-429.8"
+        font-family="Arial"
+        font-size="14.00"
+      >Static Files</text>
+    </g>
+    <!-- css -->
+    <g id="node6" class="node">
+      <title>css</title>
+      <polygon
+        fill="white"
+        stroke="black"
+        points="102.35,-60 48.35,-60 48.35,-24 102.35,-24 102.35,-60"
+      />
+      <text
+        text-anchor="middle"
+        x="75.35"
+        y="-37.8"
+        font-family="Arial"
+        font-size="14.00"
+      >CSS</text>
+    </g>
+    <!-- components_2&#45;&gt;api -->
+    <g id="edge2" class="edge">
+      <title>components_2-&gt;api</title>
+      <path
+        fill="none"
+        stroke="#555555"
+        d="M123.54,-137.81C161.19,-128.09 213.23,-114.65 248.04,-105.66"
+      />
+      <polygon
+        fill="#555555"
+        stroke="#555555"
+        points="248.87,-109.06 257.68,-103.17 247.12,-102.28 248.87,-109.06"
+      />
+    </g>
+    <!-- files_2 -->
+    <g id="node8" class="node">
+      <title>files_2</title>
+      <polygon
+        fill="white"
+        stroke="black"
+        points="102.35,-114 48.35,-114 48.35,-78 102.35,-78 102.35,-114"
+      />
+      <text
+        text-anchor="middle"
+        x="75.35"
+        y="-91.8"
+        font-family="Arial"
+        font-size="14.00"
+      >Files</text>
+    </g>
+    <!-- files_2&#45;&gt;api -->
+    <g id="edge3" class="edge">
+      <title>files_2-&gt;api</title>
+      <path
+        fill="none"
+        stroke="#555555"
+        d="M102.83,-96C139.52,-96 205.99,-96 247.81,-96"
+      />
+      <polygon
+        fill="#555555"
+        stroke="#555555"
+        points="247.66,-99.5 257.66,-96 247.66,-92.5 247.66,-99.5"
+      />
+    </g>
+    <!-- translations -->
+    <g id="node9" class="node">
+      <title>translations</title>
+      <polygon
+        fill="white"
+        stroke="black"
+        points="121.48,-222 29.23,-222 29.23,-186 121.48,-186 121.48,-222"
+      />
+      <text
+        text-anchor="middle"
+        x="75.35"
+        y="-199.8"
+        font-family="Arial"
+        font-size="14.00"
+      >Translations</text>
+    </g>
+  </g>
 </svg>

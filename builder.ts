@@ -16,14 +16,11 @@ import { walk } from "walk";
 import * as path from "path";
 import { getStream } from "./core/page.tsx";
 import { getComponentStream } from "./core/component.tsx";
-import { denoPlugins } from "esbuild-deno-loader";
 import FrameworkErrorPage from "./core/error_page.tsx";
 import * as b64 from "b64";
-import i18next from "i18next";
 //@ts-ignore
 import { DenoKvFs } from "deno_kv_fs";
 import FrontExporter from "./front_exporter.ts";
-import { format } from "jsr:@std/fs@1.0.3/eol";
 
 interface ErrorProps {
   dev: boolean;
@@ -64,12 +61,10 @@ class Builder {
   translations: { [key: string]: any } = {};
   registeredRoutes: { [key: string]: Function } = {};
   cache: { [key: string]: Uint8Array } = {};
-  esbuild: any = null;
   isServerless: boolean = false;
   isInDenoDeploy: boolean = false;
   hasChange: boolean = false;
   importFromRoot: Function;
-  i18next: Function = () => undefined;
   //@ts-ignore
   constructor(options: any, denoJson: any, importFromRoot) {
     this.importFromRoot = importFromRoot;
@@ -94,8 +89,6 @@ class Builder {
     this.isServerless = this.isInDenoDeploy ||
       this.options.framework.serverless;
     if (this.isServerless) { //is in deno deploy
-      this.esbuild = await import("esbuild-portable");
-      await this.esbuild.initialize({ worker: false });
       if (this.options.framework.kv.pathOrUrl) {
         await this.initKvFromUrl();
       } else {
@@ -105,8 +98,6 @@ class Builder {
         }
       }
     } else {
-      this.esbuild = await import("esbuild");
-      await this.esbuild.initialize({});
       if (this.options.framework.kv.pathOrUrl) {
         await this.initKvFromUrl();
       } else {
@@ -648,27 +639,14 @@ class Builder {
           await (await fetch(new URL("core/frontend_init.js", import.meta.url)))
             .text(),
       );
-      const res = await this.esbuild.build({
-        plugins: [
-          windowsPathFixer(),
-          ...denoPlugins({
-            configPath: this.denoJsonPath,
-          }),
-        ],
-        entryPoints: [dataURL],
-        jsxDev: this.options.framework.dev,
-        bundle: true,
-        treeShaking: true,
+      const res = await Deno.bundle({
+        entrypoints: [dataURL],
         minify: this.options.framework.dev ? false : true,
-        absWorkingDir: this.path,
         format: "esm",
-        jsx: "automatic",
         platform: "browser",
-        charset: "utf8",
         write: false,
       });
-      await this.esbuild.stop();
-      const code = res.outputFiles[0].contents;
+      const code = res.outputFiles![0].contents;
       if (Server.kvFs) {
         await Server.kvFs.save({ path: ["build", "app.js"], content: code });
         await Server.kvFs.save({
@@ -676,7 +654,7 @@ class Builder {
           content: this.encoder.encode(version),
         });
       }
-      this.cache["app.js"] = code;
+      this.cache["app.js"] = code!;
       console.log("Built frontend resources and translations");
     } catch (e) {
       console.error("Error building frontend resources and translations");
@@ -735,21 +713,15 @@ class Builder {
         }
         this.cache["app.css"] = encoded;
       } else {
-        const res = await this.esbuild.build({
-          stdin: {
-            contents: allCss,
-            loader: "css",
-          },
-          bundle: true,
-          treeShaking: true,
+        let dataURL = "data:text/css;base64,";
+        dataURL += b64.encodeBase64(allCss);
+        const res = await Deno.bundle({
+          entrypoints: [dataURL],
           minify: this.options.framework.dev ? false : true,
-          absWorkingDir: this.path,
           platform: "browser",
-          charset: "utf8",
           write: false,
         });
-        await this.esbuild.stop();
-        const code = res.outputFiles[0].contents;
+        const code = res.outputFiles![0].contents;
         if (Server.kvFs) {
           await Server.kvFs.save({ path: ["build", "app.css"], content: code });
           await Server.kvFs.save({
@@ -757,7 +729,7 @@ class Builder {
             content: this.encoder.encode(version),
           });
         }
-        this.cache["app.css"] = code;
+        this.cache["app.css"] = code!;
       }
       console.log("Built frontend CSS files");
     } catch (e) {
