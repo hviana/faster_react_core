@@ -699,7 +699,7 @@ class Builder {
         allCss += `/* ${f} */\n`;
         allCss += await Deno.readTextFile(f);
       }
-      if (this.options.framework.dev) {
+      if (this.options.framework.dev || true) { //TODO minify CSS
         const encoded = this.encoder.encode(allCss);
         if (Server.kvFs) {
           await Server.kvFs.save({
@@ -713,23 +713,7 @@ class Builder {
         }
         this.cache["app.css"] = encoded;
       } else {
-        let dataURL = "data:text/css;base64,";
-        dataURL += b64.encodeBase64(allCss);
-        const res = await Deno.bundle({
-          entrypoints: [dataURL],
-          minify: this.options.framework.dev ? false : true,
-          platform: "browser",
-          write: false,
-        });
-        const code = res.outputFiles![0].contents;
-        if (Server.kvFs) {
-          await Server.kvFs.save({ path: ["build", "app.css"], content: code });
-          await Server.kvFs.save({
-            path: ["build", "css_version"],
-            content: this.encoder.encode(version),
-          });
-        }
-        this.cache["app.css"] = code!;
+        //TODO minify CSS
       }
       console.log("Built frontend CSS files");
     } catch (e) {
