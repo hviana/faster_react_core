@@ -28,24 +28,6 @@ interface ErrorProps {
   stack: string;
 }
 
-const windowsPathFixer = () => {
-  return {
-    name: "fix-windows",
-    setup(build: any) {
-      if (Deno.build.os === "windows") {
-        build.onResolve({ filter: /\.*/ }, (args: any) => {
-          if (args.path.startsWith("\\")) {
-            const normalized = path.resolve(args.path);
-            return {
-              path: normalized,
-            };
-          }
-        });
-      }
-    },
-  };
-};
-
 class Builder {
   //@ts-ignore
   server: Server = new Server();
@@ -210,7 +192,7 @@ class Builder {
   async getErrorPage(e: any, type: "page" | "component") {
     const errorProps: ErrorProps = {
       dev: this.options.framework.dev,
-      msg: (e.message || JSON.stringify(e)),
+      msg: e.message || JSON.stringify(e),
       stack: e.stack,
     };
     if (type == "page") {
@@ -633,29 +615,43 @@ class Builder {
           return;
         }
       }
-      let dataURL = "data:application/typescript;base64,";
-      dataURL += b64.encodeBase64(
-        allImports +
-          await (await fetch(new URL("core/frontend_init.js", import.meta.url)))
-            .text(),
-      );
-      const res = await Deno.bundle({
-        entrypoints: [dataURL],
-        minify: this.options.framework.dev ? false : true,
-        format: "esm",
-        platform: "browser",
-        write: false,
-      });
-      const code = res.outputFiles![0].contents;
-      if (Server.kvFs) {
-        await Server.kvFs.save({ path: ["build", "app.js"], content: code });
-        await Server.kvFs.save({
-          path: ["build", "js_version"],
-          content: this.encoder.encode(version),
+      // TEMPORARY DISABLED BY Deno.bundle CHANGES
+      //let dataURL = "data:application/typescript;base64,";
+      //dataURL += b64.encodeBase64(
+      //  allImports +
+      //    await (await fetch(new URL("core/frontend_init.js", import.meta.url)))
+      //      .text(),
+      //);
+
+      const entrySource = allImports +
+        await (await fetch(new URL("core/frontend_init.js", import.meta.url)))
+          .text();
+
+      // create a real entrypoint file
+      const tmp = await Deno.makeTempFile({ suffix: ".ts" });
+      await Deno.writeTextFile(tmp, entrySource);
+
+      try {
+        const res = await Deno.bundle({
+          entrypoints: [path.toFileUrl(tmp).href],
+          minify: this.options.framework.dev ? false : true,
+          format: "esm",
+          platform: "browser",
+          write: false,
         });
+        const code = res.outputFiles![0].contents;
+        if (Server.kvFs) {
+          await Server.kvFs.save({ path: ["build", "app.js"], content: code });
+          await Server.kvFs.save({
+            path: ["build", "js_version"],
+            content: this.encoder.encode(version),
+          });
+        }
+        this.cache["app.js"] = code!;
+        console.log("Built frontend resources and translations");
+      } finally {
+        await Deno.remove(tmp).catch(() => {});
       }
-      this.cache["app.js"] = code!;
-      console.log("Built frontend resources and translations");
     } catch (e) {
       console.error("Error building frontend resources and translations");
       console.log(e);
